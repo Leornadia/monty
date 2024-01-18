@@ -1,39 +1,31 @@
 #include "monty.h"
 /**
- * op_push - pushes an integer onto the stack
+ * push - pushes an integer onto the stack
  * @stack: double pointer to the stack
- * @line_number: line number of instruction
+ * @line_number: line number of where instruction occurs
 */
-void op_push(stack_t **stack, unsigned int line_number)
+void push(stack_t **stack, unsigned int line_number)
 {
-int num;
-char *arg = strtok(NULL, " \n\t\r");
-if (!arg || !is_number(arg))
+int n;
+if (/* condition */)
 {
-fprintf(stderr, "L%u: usage: push integer\n", line_number);
+fprintf(stderr, "L%d: usage: push integer\n", line_number);
 exit(EXIT_FAILURE);
 }
-num = atoi(arg);
-add_node(stack, num);
+n = atoi(/* argument */);
 }
 /**
- * add_node - adds new node with data to stack
- * @stack: double pointer to the top node
- * @n: integer data for the new node
+* pall - prints all values on the stack
+* @stack: double pointer to top node
+* @line_number: line number, ignored
 */
-void add_node(stack_t **stack, int n)
+void pall(stack_t **stack, unsigned int line_number)
 {
-stack_t *new = malloc(sizeof(stack_t));
-if (!new)
+stack_t *current;
+current = *stack;
+while (current != NULL)
 {
-free_stack(*stack);
-fprintf(stderr, "Error: malloc failed\n");
-exit(EXIT_FAILURE);
+printf("%d\n", current->n);
+current = current->next;
 }
-new->n = n;
-new->prev = NULL;
-new->next = *stack;
-if (*stack)
-(*stack)->prev = new;
-*stack = new;
 }

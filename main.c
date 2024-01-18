@@ -1,62 +1,38 @@
 #include "monty.h"
-
-#define USAGE_ERROR "USAGE: monty file"
-
-stack_t *stack = NULL;
-
-void read_file(FILE *fp);
-void execute_instruction(char *instr, stack_t **stack);
-
-void op_push(stack_t **stack, int line_num);
-void op_pall(stack_t **stack, int line_num);
-
-int main(int argc, char **argv) {
-
-    FILE *fp;
-    
-    if (argc != 2) {
-        fprintf(stderr, "%s\n", USAGE_ERROR);
-        exit(EXIT_FAILURE); 
-    }
-    
-    fp = fopen(argv[1], "r");
-    if (fp == NULL) {
-        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
-    
-    read_file(fp, &stack);
-    
-    fclose(fp);
-    free(stack);
-    
-    return EXIT_SUCCESS;
-}
-
-
-void read_file(FILE *fp, stack_t **stack) {
-    
+/**
+ * main - Entry point
+ * @argc: Argument count
+ * @argv: Argument vector
+ * 
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
+ */
+int main(int argc, char **argv)
+{
+    FILE *file;
     char *line = NULL;
     size_t len = 0;
-    unsigned int line_num = 0;
-    
-    while(getline(&line, &len, fp) != -1) {
-      
-        line_num++;
-        execute_instruction(line, stack); 
+    ssize_t read;
+
+    if (argc != 2)
+    {
+        fprintf(stderr, "USAGE: monty file\n");
+        return (EXIT_FAILURE);
     }
-    
+
+    file = fopen(argv[1], "r");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+        return (EXIT_FAILURE);
+    }
+
+    while ((read = getline(&line, &len, file)) != -1)
+    {
+        printf("%s", line);
+    }
+
     free(line);
+    fclose(file);
+    return (EXIT_SUCCESS);
 }
 
-void execute_instruction(char *instr, stack_t **stack) {
-
-    char *opcode = strtok(instr, " ");
-    
-    if (strcmp(opcode, "push") == 0)
-        op_push(stack, line_num);
-        
-    else if (strcmp(opcode, "pall") == 0)
-        op_pall(stack, line_num);
-
-}
